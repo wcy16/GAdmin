@@ -10,7 +10,8 @@ import (
 func main() {
 	var c bool
 
-	flag.BoolVar(&c, "compile", false, "compile assets")
+	flag.BoolVar(&c, "c", false, "compile assets")
+	flag.Parse()
 
 	if c {
 		compile("static", "../static/", "../static/", "../static/static.go", true, true)

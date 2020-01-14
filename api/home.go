@@ -15,7 +15,12 @@ type DataTable struct {
 }
 
 func Index(c *gin.Context) {
+	cards := make([]Card, 0)
+	cards = append(cards, SystemCard())
+
 	c.HTML(http.StatusOK, "index.html", gin.H{
+		"cards": cards,
+
 		"sidebar": gin.H{
 			"prefix":   "table",
 			"username": config.SETTING.Database.Username,
