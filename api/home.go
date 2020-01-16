@@ -27,6 +27,7 @@ func Index(c *gin.Context) {
 			"prefix":   "table",
 			"username": config.SETTING.Database.Username,
 			"tables":   GetTables(),
+			"commands": config.SETTING.Commands,
 		},
 	})
 }
@@ -99,4 +100,19 @@ func QueryRawSQL(c *gin.Context) {
 		c.String(http.StatusOK, err.Error())
 	}
 
+}
+
+// todo
+func AddCmd(c *gin.Context) {
+	c.String(http.StatusOK, "add cmd to do")
+}
+
+func ExeCmd(c *gin.Context) {
+	sid := c.Param("id")
+	id, err := strconv.Atoi(sid)
+	if err != nil {
+		c.String(http.StatusOK, err.Error())
+	} else {
+		c.String(http.StatusOK, config.SETTING.Commands[id].SQL)
+	}
 }

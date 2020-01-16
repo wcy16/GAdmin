@@ -31,7 +31,7 @@
                         {{ $p := .prefix }}
                         {{range $index, $element := .tables }}
                             <li class="nav-item">
-                                <a href="#" onclick="LoadContent('{{ $p }}/{{$element}}')" class="nav-link load-table" id="{{$element}}">
+                                <a href="#" onclick="LoadContent('{{ $p }}/{{$element}}')" class="nav-link load-table">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>{{$element}}</p>
                                 </a>
@@ -47,6 +47,22 @@
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="#" onclick="LoadContent('add_cmd')" class="nav-link load-table">
+                                <i class="far nav-icon"></i>
+                                <p><i>add new command</i></p>
+                            </a>
+                        </li>
+                        {{range $id, $elem := .commands }}
+                            <li class="nav-item">
+                                <a href="#" onclick="LoadContent('cmd/{{$id}}')" class="nav-link load-table">
+                                    <i class="far nav-icon"></i>
+                                    <p>{{.Name}}</p>
+                                </a>
+                            </li>
+                        {{end}}
+                    </ul>
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link" onclick="LoadContent('raw_sql')">

@@ -14,6 +14,12 @@ type Database struct {
 
 type Setting struct {
 	Database Database
+	Commands []Command
+}
+
+type Command struct {
+	Name string
+	SQL  string
 }
 
 var SETTING Setting
