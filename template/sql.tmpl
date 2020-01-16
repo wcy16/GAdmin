@@ -1,0 +1,52 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1 class="m-0 text-dark">
+        Execute Raw SQL
+        <small style="color: red;">Warning: execute at your own risk</small>
+    </h1>
+</section>
+<!-- /.content-header -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header with-border">
+                    <h3 class="box-title">Enter your SQL query.</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="card-body">
+                    <div>
+                        <textarea id="exe_sql" rows="5" placeholder="enter your sql query..." style="width: 100%;"></textarea>
+                    </div>
+                    <div>
+                        <a href="#" class="btn btn-primary" onclick="exeSQL()">execute</a>
+                        <a href="#" class="btn btn-primary">query</a>
+                    </div>
+                </div>
+
+                <!-- ./box-body -->
+                <div class="card-footer">
+                    <div id="results">
+                        Results
+                    </div>
+
+                    <!-- /.row -->
+                </div>
+                <!-- /.box-footer -->
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    function exeSQL() {
+        var sql = $("#exe_sql").val();
+        $.ajax({
+            url:"/raw_sql",
+            type:"POST",
+            data:sql,
+            success:function(result){
+                $("#results").html(result);
+            }
+        });
+    }
+</script>

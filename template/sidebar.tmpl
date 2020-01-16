@@ -31,7 +31,7 @@
                         {{ $p := .prefix }}
                         {{range $index, $element := .tables }}
                             <li class="nav-item">
-                                <a href="#" onclick="LoadTable('{{ $p }}/{{$element}}')" class="nav-link load-table" id="{{$element}}">
+                                <a href="#" onclick="LoadContent('{{ $p }}/{{$element}}')" class="nav-link load-table" id="{{$element}}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>{{$element}}</p>
                                 </a>
@@ -49,7 +49,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="#" class="nav-link" onclick="LoadContent('raw_sql')">
                         <i class="nav-icon fas fa-keyboard"></i>
                         <p>
                             Raw SQL

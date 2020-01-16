@@ -17,6 +17,8 @@ func Serve(settingFile string) {
 	router.GET("/", api.Index)
 	router.GET("/table/:name", api.Table)
 	router.GET("/table/:name/data", api.LoadData)
+	router.GET("/raw_sql", api.RawSQL)
+	router.POST("/raw_sql", api.ExeRawSQL)
 
 	// Listen and serve on 0.0.0.0:8080
 	router.Run(":8080")
