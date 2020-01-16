@@ -19,8 +19,8 @@
                         <textarea id="exe_sql" rows="5" placeholder="enter your sql query..." style="width: 100%;"></textarea>
                     </div>
                     <div>
-                        <a href="#" class="btn btn-primary" onclick="exeSQL()">execute</a>
-                        <a href="#" class="btn btn-primary">query</a>
+                        <a href="#" class="btn btn-primary" onclick="exeSQL('/exe_sql')">execute</a>
+                        <a href="#" class="btn btn-primary" onclick="exeSQL('/query_sql')">query</a>
                     </div>
                 </div>
 
@@ -38,10 +38,10 @@
     </div>
 </section>
 <script>
-    function exeSQL() {
+    function exeSQL(url) {
         var sql = $("#exe_sql").val();
         $.ajax({
-            url:"/raw_sql",
+            url:url,
             type:"POST",
             data:sql,
             success:function(result){

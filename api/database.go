@@ -66,11 +66,10 @@ func GetCols(name string) []string {
 	return cols
 }
 
-func GetRows(name string, limit, offset uint) (cols []string, results [][]string) {
-	script := fmt.Sprintf("SELECT * FROM %s LIMIT %d OFFSET %d", name, limit, offset)
-	rows, err := db.Query(script)
+func Query(sql string) (cols []string, results [][]string, err error) {
+	rows, err := db.Query(sql)
 	if err != nil {
-		panic(err)
+		return
 	}
 
 	cols, err = rows.Columns()
@@ -78,7 +77,7 @@ func GetRows(name string, limit, offset uint) (cols []string, results [][]string
 		panic(err)
 	}
 
-	results = make([][]string, 0, limit)
+	results = make([][]string, 0)
 
 	rawResult := make([][]byte, len(cols))
 
@@ -105,5 +104,11 @@ func GetRows(name string, limit, offset uint) (cols []string, results [][]string
 
 		results = append(results, result)
 	}
+	return
+}
+
+func GetRows(name string, limit, offset uint) (cols []string, results [][]string, err error) {
+	script := fmt.Sprintf("SELECT * FROM %s LIMIT %d OFFSET %d", name, limit, offset)
+	cols, results, err = Query(script)
 	return
 }
