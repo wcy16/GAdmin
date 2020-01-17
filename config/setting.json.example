@@ -4,4 +4,33 @@
     "password": "",
     "dbname": ""
   }
+  "commands": [
+    {
+      "name": "get count",
+      "description": "get count of a table",
+      "sql": "SELECT COUNT(*) FROM %s",
+      "query": true,
+      "params": 1,
+      "comments": [
+        "table name"
+      ]
+    },
+    {
+      "name": "show tables",
+      "sql": "SHOW TABLES",
+      "query": true
+    },
+    {
+      "name": "update data",
+      "description": "update",
+      "sql": "UPDATE %s SET %s WHERE %s",
+      "query": false,
+      "params": 3,
+      "comments": [
+        "table name",
+        "updated word",
+        "condition"
+      ]
+    }
+  ]
 }

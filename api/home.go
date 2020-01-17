@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gadmin/config"
 	"github.com/gin-gonic/gin"
+	"html/template"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -73,14 +74,14 @@ func ExeRawSQL(c *gin.Context) {
 	sql := string(body)
 
 	result, err := db.Exec(sql)
-	var rows_affected int64
+	var rowsAffected int64
 	if err != nil {
-		rows_affected = -1
+		rowsAffected = -1
 	} else {
-		rows_affected, _ = result.RowsAffected()
+		rowsAffected, _ = result.RowsAffected()
 	}
 
-	ret := fmt.Sprintf("%d row(s) affected. %v", rows_affected, err)
+	ret := fmt.Sprintf("%d row(s) affected. %v", rowsAffected, err)
 
 	c.String(http.StatusOK, ret)
 }
@@ -107,12 +108,72 @@ func AddCmd(c *gin.Context) {
 	c.String(http.StatusOK, "add cmd to do")
 }
 
-func ExeCmd(c *gin.Context) {
+func GetCmd(c *gin.Context) {
 	sid := c.Param("id")
 	id, err := strconv.Atoi(sid)
 	if err != nil {
 		c.String(http.StatusOK, err.Error())
 	} else {
-		c.String(http.StatusOK, config.SETTING.Commands[id].SQL)
+		command := config.SETTING.Commands[id]
+		card := Card{}
+		card.Title = command.Name
+
+		for i := 0; i < command.Params; i++ {
+
+		}
+
+		sql := fmt.Sprintf(command.SQL, command.Input...)
+		card.Content = template.HTML(sql)
+
+		link := Link{
+			Name: "Execute",
+			Href: "#",
+		}
+		card.Link = append(card.Link, link)
+
+		c.HTML(http.StatusOK, "exe_cmd.tmpl", gin.H{
+			"submit":      "/cmd/" + sid,
+			"description": command.Description,
+			"card":        card,
+		})
+	}
+}
+
+func ExeCmd(c *gin.Context) {
+	var params []interface{}
+	if err := c.ShouldBindJSON(&params); err != nil {
+		c.String(http.StatusOK, err.Error())
+	} else {
+		sid := c.Param("id")
+		id, err := strconv.Atoi(sid)
+		if err != nil {
+			c.String(http.StatusOK, err.Error())
+		} else {
+			command := config.SETTING.Commands[id]
+			sql := fmt.Sprintf(command.SQL, params...)
+			if command.Query {
+				cols, rows, err := Query(sql)
+				if err == nil {
+					c.HTML(http.StatusOK, "datatable.tmpl", gin.H{
+						"rows": rows,
+						"cols": cols,
+					})
+				} else {
+					c.String(http.StatusOK, err.Error())
+				}
+			} else {
+				result, err := db.Exec(sql)
+				var rowsAffected int64
+				if err != nil {
+					rowsAffected = -1
+				} else {
+					rowsAffected, _ = result.RowsAffected()
+				}
+
+				ret := fmt.Sprintf("%d row(s) affected. %v", rowsAffected, err)
+
+				c.String(http.StatusOK, ret)
+			}
+		}
 	}
 }

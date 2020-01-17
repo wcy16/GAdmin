@@ -1,0 +1,47 @@
+<div style="padding: 1%">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="m-0">{{.card.Title}}</h5>
+                <small>{{.description}}</small>
+            </div>
+            <div class="card-body">
+                <form id="exe_cmd_form" onsubmit="return exeCmd({{.submit}})">
+                {{.card.Content}}
+                    <br>
+                {{range .card.Link}}
+                    <button class="card-link btn btn-primary" type="submit">{{.Name}}</button>
+                {{end}}
+                </form>
+            </div>
+            <div class="card-footer" id="cmd_result">
+                Results
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function exeCmd(url) {
+        var elem = document.getElementsByTagName("input");
+        var ans = [];
+        var i = 0;
+        while(i !== elem.length) {
+            ans.push(elem[i].value);
+            i += 1;
+        }
+
+        var data = JSON.stringify(ans);
+
+        $.ajax({
+            url:url,
+            type:"POST",
+            data:data,
+            success:function(result){
+                $("#cmd_result").html(result);
+            }
+        });
+
+        return false;
+
+    }
+</script>
