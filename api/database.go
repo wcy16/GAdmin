@@ -11,10 +11,11 @@ var db *sql.DB
 
 func DBConnect() {
 	var err error
+	setting := config.Get()
 	dataSourceName := fmt.Sprintf("%s:%s@/%s",
-		config.SETTING.Database.Username,
-		config.SETTING.Database.Password,
-		config.SETTING.Database.DBname)
+		setting.Database.Username,
+		setting.Database.Password,
+		setting.Database.DBname)
 
 	db, err = sql.Open("mysql", dataSourceName)
 	if err != nil {

@@ -28,30 +28,41 @@ type Command struct {
 	Input       []interface{} `json:"-"`
 }
 
-var SETTING Setting
+func Get() Setting {
+	return setting
+}
+
+var setting Setting
 
 func LoadSetting(file string) {
-	setting, err := os.Open(file)
+	f, err := os.Open(file)
 	if err != nil {
 		panic(err)
 	}
-	defer setting.Close()
+	defer f.Close()
 
-	byte, _ := ioutil.ReadAll(setting)
+	byte, _ := ioutil.ReadAll(f)
 
-	if err = json.Unmarshal(byte, &SETTING); err != nil {
+	if err = json.Unmarshal(byte, &setting); err != nil {
 		panic(err)
 	} else {
-		for _, c := range SETTING.Commands {
+		for _, c := range setting.Commands {
 			compileCommand(c)
 		}
 	}
 }
 
+func AddCmd(cmd *Command) (l int) {
+	compileCommand(cmd)
+	l = len(setting.Commands)
+	setting.Commands = append(setting.Commands, cmd)
+	return
+}
+
 var cmdInput = `
 <div class="input-group" style="margin: 5px;">
 <span class="input-group-prepend"><a href="#" class="btn btn-default disabled">%s</a></span>
-<input type="text" class="form-control" id="execmd-%d" required></input>
+<input type="text" class="form-control" id="execmd-%d" required>
 </div>
 `
 

@@ -47,11 +47,11 @@
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
-                    <ul class="nav nav-treeview">
+                    <ul class="nav nav-treeview" id="side_cmd">
                         <li class="nav-item">
-                            <a href="#" onclick="LoadContent('add_cmd')" class="nav-link load-table">
+                            <a href="#" onclick="LoadContent('cmd')" class="nav-link load-table">
                                 <i class="far nav-icon"></i>
-                                <p><i>add new command</i></p>
+                                <p><i><b>add new command</b></i></p>
                             </a>
                         </li>
                         {{range $id, $elem := .commands }}
@@ -73,6 +73,7 @@
                         </p>
                     </a>
                 </li>
+
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

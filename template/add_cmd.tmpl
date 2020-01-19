@@ -1,0 +1,132 @@
+<div style="padding: 1%">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="m-0">Add Command</h5>
+            </div>
+            <div class="card-body">
+                <form id="add_cmd_form" onsubmit="return submitAddCmd()">
+                    <div class="input-group" style="margin: 5px;">
+                        <span class="input-group-prepend">
+                            <a href="#" class="btn btn-default disabled">
+                                Command Name
+                            </a>
+                        </span>
+                        <input type="text" class="form-control" name="name" required>
+                    </div>
+                    <div class="input-group" style="margin: 5px;">
+                        <span class="input-group-prepend">
+                            <a href="#" class="btn btn-default disabled">
+                                Description
+                            </a>
+                        </span>
+                        <input type="text" class="form-control" name="description" required>
+                    </div>
+                    <div class="input-group" style="margin: 5px;">
+                        <span class="input-group-prepend">
+                            <a href="#" class="btn btn-default disabled">
+                                SQL
+                            </a>
+                        </span>
+                        <input type="text" class="form-control" name="sql" required>
+                    </div>
+
+                    <div class="input-group" style="margin: 5px;">
+                        <span class="input-group-prepend">
+                            <a href="#" class="btn btn-default disabled">
+                                Type
+                            </a>
+                        </span>
+                        <select class="form-control" name="query" required>
+                            <option value="0">Execute</option>
+                            <option value="1">Query</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group" style="margin: 5px;">
+                        <span class="input-group-prepend">
+                            <button class="btn btn-default disabled">
+                                Parameters
+                            </button>
+                        </span>
+                        <span class="input-group-append">
+                            <a href="#" class="btn btn-default" onclick="addParam()">
+                                +
+                            </a>
+                        </span>
+                    </div>
+
+                    <div id="add_params">
+                    </div>
+
+                    <button type="submit" class="btn btn-default">Submit</button>
+
+                </form>
+            </div>
+            <div class="card-footer" id="cmd_result">
+                Results
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function addParam() {
+        var param = '<div class="input-group" style="margin: 5px;">\n' +
+            '                            <input type="text" class="form-control" name="comments" required>\n' +
+            '                            <span class="input-group-append">\n' +
+            '                                <button class="btn btn-default" onclick="delParam(this)">\n' +
+            '                                    -\n' +
+            '                                </button>\n' +
+            '                            </span>\n' +
+            '                        </div>';
+        $("#add_params").append(param);
+    }
+
+    function delParam(btn) {
+        btn.parentNode.parentNode.remove();
+    }
+
+    function submitAddCmd() {
+        var arr = $("#add_cmd_form").serializeArray();
+        var data = {};
+        data["comments"] = [];
+        for (var i = 0; i < arr.length; i++) {
+            var field = arr[i];
+
+            if (field.name === "comments") {
+                data["comments"].push(field.value)
+            } else {
+                data[field.name] = field.value;
+            }
+
+            if (data["query"] === "0") {
+                data["query"] = false;
+            } else {
+                data["query"] = true;
+            }
+        }
+
+        $.ajax({
+            url:"/cmd",
+            type:"POST",
+            data:JSON.stringify(data),
+            success:function(result){
+                window.alert("success!");
+                var name = data["name"];
+                var t = "<li class=\"nav-item\">\n" +
+                    "                                <a href=\"#\" onclick=\"LoadContent('cmd/" + result + "')\" class=\"nav-link load-table\">\n" +
+                    "                                    <i class=\"far nav-icon\"></i>\n" +
+                    "                                    <p><i>" + name + "</i></p>\n" +
+                    "                                </a>\n" +
+                    "                            </li>";
+
+                $("#side_cmd").append(t);
+                LoadContent("/cmd");
+            },
+            error:function (result) {
+                window.alert(result.responseText);
+            }
+        }).fail();
+        return false;
+    }
+</script>

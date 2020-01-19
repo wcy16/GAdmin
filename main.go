@@ -22,7 +22,8 @@ func Serve(settingFile string) {
 	router.POST("/query_sql", api.QueryRawSQL)
 	router.GET("/cmd/:id", api.GetCmd)
 	router.POST("/cmd/:id", api.ExeCmd)
-	router.GET("/add_cmd", api.AddCmd)
+	router.GET("/cmd", api.GetAddCmd)
+	router.POST("/cmd", api.AddCmd)
 
 	// Listen and serve on 0.0.0.0:8080
 	router.Run(":8080")

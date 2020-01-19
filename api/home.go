@@ -26,9 +26,9 @@ func Index(c *gin.Context) {
 
 		"sidebar": gin.H{
 			"prefix":   "table",
-			"username": config.SETTING.Database.Username,
+			"username": config.Get().Database.Username,
 			"tables":   GetTables(),
-			"commands": config.SETTING.Commands,
+			"commands": config.Get().Commands,
 		},
 	})
 }
@@ -103,9 +103,21 @@ func QueryRawSQL(c *gin.Context) {
 
 }
 
-// todo
+func GetAddCmd(c *gin.Context) {
+	c.HTML(http.StatusOK, "add_cmd.tmpl", nil)
+}
+
 func AddCmd(c *gin.Context) {
-	c.String(http.StatusOK, "add cmd to do")
+	cmd := config.Command{}
+
+	if err := c.ShouldBindJSON(&cmd); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+	} else {
+		cmd.Params = len(cmd.Comments)
+		id := config.AddCmd(&cmd)
+		// todo save command
+		c.String(http.StatusOK, fmt.Sprint(id))
+	}
 }
 
 func GetCmd(c *gin.Context) {
@@ -114,7 +126,7 @@ func GetCmd(c *gin.Context) {
 	if err != nil {
 		c.String(http.StatusOK, err.Error())
 	} else {
-		command := config.SETTING.Commands[id]
+		command := config.Get().Commands[id]
 		card := Card{}
 		card.Title = command.Name
 
@@ -149,7 +161,7 @@ func ExeCmd(c *gin.Context) {
 		if err != nil {
 			c.String(http.StatusOK, err.Error())
 		} else {
-			command := config.SETTING.Commands[id]
+			command := config.Get().Commands[id]
 			sql := fmt.Sprintf(command.SQL, params...)
 			if command.Query {
 				cols, rows, err := Query(sql)
