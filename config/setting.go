@@ -13,8 +13,14 @@ type Database struct {
 	DBname   string
 }
 
+type User struct {
+	Username string
+	Password string
+}
+
 type Setting struct {
 	Database Database
+	User     User
 	Commands []*Command
 }
 
@@ -57,6 +63,14 @@ func AddCmd(cmd *Command) (l int) {
 	l = len(setting.Commands)
 	setting.Commands = append(setting.Commands, cmd)
 	return
+}
+
+func CheckUser(username, password string) bool {
+	if username == setting.User.Username && password == setting.User.Password {
+		return true
+	} else {
+		return false
+	}
 }
 
 var cmdInput = `

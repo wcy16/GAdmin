@@ -2,6 +2,7 @@ package gadmin
 
 import (
 	"gadmin/api"
+	"gadmin/auth"
 	"gadmin/config"
 	"github.com/gin-gonic/gin"
 )
@@ -14,6 +15,11 @@ func Serve(settingFile string) {
 
 	loadRes(router)
 
+	router.GET("/signin", api.SignIn)
+	router.POST("/signin", api.SignInCheck)
+
+	router.Use(auth.CookieCheck())
+	router.Use(auth.CookieUpdate())
 	router.GET("/", api.Index)
 	router.GET("/table/:name", api.Table)
 	router.GET("/table/:name/data", api.LoadData)
