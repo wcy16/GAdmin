@@ -67,7 +67,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 {{template "jquery.tmpl"}}
 <script>
     function LoadContent(url) {
-        $.ajax({url:url,success:function(result){
+        $.ajax({
+            url:url,
+            success:function(result){
                 $("#main-content").html(result);
             }});
     }

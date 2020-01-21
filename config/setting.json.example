@@ -4,6 +4,10 @@
     "password": "",
     "dbname": ""
   }
+  "user": {
+    "username": "root",
+    "password": "pwd"
+  },
   "commands": [
     {
       "name": "get count",

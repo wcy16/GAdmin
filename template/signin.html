@@ -70,24 +70,42 @@
     <link rel="stylesheet" href="static/adminlte/dist/css/adminlte.min.css">
 </head>
 <body class="text-center hold-transition login-page">
-<form class="form-signin" action="/signin" method="post">
+<form id="signup_form" class="form-signin" onsubmit="return submitSignIn()">
     <div class="login-logo">
         <a href="#"><b>G</b>Admin</a>
     </div>
     <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
     <label for="inputUsername" class="sr-only">Username</label>
-    <input id="inputUsername" class="form-control" placeholder="Username" required autofocus>
+    <input id="inputUsername" name="username" class="form-control" placeholder="Username" required autofocus>
     <label for="inputPassword" class="sr-only">Password</label>
-    <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+    <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
     <div class="checkbox mb-3">
         <label>
-            <input type="checkbox" value="remember-me"> Remember me
+            <input type="checkbox" value="remember" name="remember"> Remember me
         </label>
     </div>
     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
     <p class="mt-5 mb-3 text-muted">&copy; 2017-2020</p>
 </form>
 </body>
+
+<script>
+    function submitSignIn() {
+        $.ajax({
+            type: "POST",
+            url: "/signin",
+            data: $('#signup_form').serialize(),
+            success: function (result) {
+                window.location.href = "/";
+            },
+            error: function (result) {
+                alert(result.responseText);
+            }
+        });
+        return false;
+    }
+</script>
+
 <!-- jQuery -->
 <script src="static/adminlte/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->

@@ -17,6 +17,7 @@ func Serve(settingFile string) {
 
 	router.GET("/signin", api.SignIn)
 	router.POST("/signin", api.SignInCheck)
+	router.GET("/signout", api.SignOut)
 
 	router.Use(auth.CookieCheck())
 	router.Use(auth.CookieUpdate())
