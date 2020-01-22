@@ -49,7 +49,7 @@
 <!-- /.content -->
 <script>
     $(function () {
-        $('#example').DataTable({
+        var table = $('#example').DataTable({
             "paging": true,
             "lengthChange": false,
             "searching": false,
@@ -61,7 +61,37 @@
             "serverSide": true,
             "ajax": "/table/" + "{{.title}}" + "/data"
         });
+
+        $('#example').on('click', 'td', function () {
+            var cell = table.cell(this);
+            var data = cell.data();
+            var index = cell.index();
+            var row = index.row;
+            var col = index.column;
+
+            var tmp = '<div class="input-group">\n' +
+                '                            <input type="text" size="16" style="width: 80%"/>\n' +
+                '                            <span class="input-group-append">\n' +
+                '                                <button type="button" class="btn btn-default"><i class="fa fa-save"></i></button>\n' +
+                '                            </span>\n' +
+                '                        </div>';
+
+            $(this).html(tmp);
+            var input = $(this).find("input");
+            input.focus().val(data);
+
+            $(this).on("blur", "div", function () {
+                this.replaceWith(data)
+            });
+
+            // todo update data
+
+        });
+
     });
+
+
+
 </script>
 
 <!-- DataTables -->
