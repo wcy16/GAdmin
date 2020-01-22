@@ -69,10 +69,10 @@
             var row = index.row;
             var col = index.column;
 
-            var tmp = '<div class="input-group">\n' +
-                '                            <input type="text" size="16" style="width: 80%"/>\n' +
+            var tmp = '<div id="my-table-edit" class="input-group">\n' +
+                '                            <input id="my-table-input" type="text" size="16" style="width: 80%"/>\n' +
                 '                            <span class="input-group-append">\n' +
-                '                                <button type="button" class="btn btn-default"><i class="fa fa-save"></i></button>\n' +
+                '                                <button id="my-table-save" type="button" class="btn btn-default"><i class="fa fa-save"></i></button>\n' +
                 '                            </span>\n' +
                 '                        </div>';
 
@@ -80,11 +80,41 @@
             var input = $(this).find("input");
             input.focus().val(data);
 
-            $(this).on("blur", "div", function () {
-                this.replaceWith(data)
+            $(this).off('click', "#my-table-save").one("click", "#my-table-save", function () {
+
+                var row_vals = table.row(row).data();
+                var col_vals = [];
+                var header = table.columns().header();
+                for (var i = 0; i !== header.length; i++) {
+                    col_vals.push(header[i].innerHTML);
+                }
+
+                var dict = {};
+                dict['rows'] = row_vals;
+                dict['cols'] = col_vals;
+                dict['col'] = parseInt(col);
+                dict['data'] = data;
+
+                $.ajax({
+                    type: "POST",
+                    url: "/table/{{.title}}",
+                    data: JSON.stringify(dict),
+                    success: function (result) {
+                        data = result;
+                        cell.data(data);
+                    },
+                    error: function (result) {
+                        alert(result.responseText);
+                    }
+                });
+                event.stopPropagation();
             });
 
-            // todo update data
+            $(this).off('blur', '#my-table-input').on("blur", "#my-table-input", function () {
+                if (event.relatedTarget == null || event.relatedTarget.id !== 'my-table-save') {
+                    this.replaceWith(data);
+                }
+            });
 
         });
 

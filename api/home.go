@@ -42,6 +42,22 @@ func Table(c *gin.Context) {
 	})
 }
 
+func Edit(c *gin.Context) {
+	type Request struct {
+		Rows []string
+		Cols []string
+		Col  int
+		Data string
+	}
+	req := Request{}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+	} else {
+		// todo update sql
+		c.String(http.StatusOK, "changed!")
+	}
+}
+
 func LoadData(c *gin.Context) {
 	name := c.Param("name")
 	draw, _ := strconv.Atoi(c.Query("draw"))

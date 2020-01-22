@@ -23,6 +23,7 @@ func Serve(settingFile string) {
 	router.Use(auth.CookieUpdate())
 	router.GET("/", api.Index)
 	router.GET("/table/:name", api.Table)
+	router.POST("/table/:name", api.Edit)
 	router.GET("/table/:name/data", api.LoadData)
 	router.GET("/raw_sql", api.RawSQL)
 	router.POST("/exe_sql", api.ExeRawSQL)
