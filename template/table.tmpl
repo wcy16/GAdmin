@@ -11,11 +11,36 @@
 
 <!-- Main content -->
 <section class="content">
+    <!-- Modal -->
+    <div class="modal fade" id="create-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Create New Data</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+                </div>
+                <div class="modal-body">
+                    <form id="add_cmd_form">
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">{{.title}}</h3>
+                    <div class="card-tools pull-right">
+                        <button class="btn btn-default" data-toggle="modal" data-target="#create-modal">Create New</button>
+                    </div>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
@@ -72,6 +97,19 @@
             col_vals.push(col);
             if (pks.includes(col)) {
                 pks_ids.push(i);
+            } else {
+                // create modal input
+                var input =
+                    '                        <div class="input-group" style="margin: 5px;">\n' +
+                    '                        <span class="input-group-prepend">\n' +
+                    '                            <a href="#" class="btn btn-default disabled">' + col +
+                    '                            </a>\n' +
+                    '                        </span>\n' +
+                    '                            <input type="text" class="form-control" name="' + col + '" required>\n' +
+                    '                        </div>'
+
+
+                $('#add_cmd_form').append(input);
             }
         }
 
