@@ -39,22 +39,41 @@ func Table(c *gin.Context) {
 	c.HTML(http.StatusOK, "table.tmpl", gin.H{
 		"title": name,
 		"cols":  cols,
+		"pks":   GetPKs(name),
 	})
 }
 
-func Edit(c *gin.Context) {
+func EditTable(c *gin.Context) {
 	type Request struct {
 		Rows []string
 		Cols []string
-		Col  int
+		Col  string
 		Data string
 	}
 	req := Request{}
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 	} else {
-		// todo update sql
-		c.String(http.StatusOK, "changed!")
+		tableName := c.Param("name")
+		sql := fmt.Sprintf("UPDATE %s SET `%s` = '%s' WHERE", tableName, req.Col, req.Data)
+
+		for i := 0; i != len(req.Rows); i++ {
+			if req.Rows[i] == "" {
+				continue
+			}
+			if i == 0 {
+				sql += fmt.Sprintf(" `%s` = '%s'", req.Cols[i], req.Rows[i])
+			} else {
+				sql += fmt.Sprintf(" AND `%s` = '%s'", req.Cols[i], req.Rows[i])
+			}
+		}
+		_, err := db.Exec(sql)
+
+		if err != nil {
+			c.String(http.StatusNotAcceptable, err.Error())
+		} else {
+			c.String(http.StatusOK, req.Data)
+		}
 	}
 }
 

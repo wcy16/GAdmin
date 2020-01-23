@@ -48,6 +48,10 @@
 </section>
 <!-- /.content -->
 <script>
+    var pks = {{.pks}};
+    var col_vals = [];
+    var pks_ids = [];
+
     $(function () {
         var table = $('#example').DataTable({
             "paging": true,
@@ -62,12 +66,26 @@
             "ajax": "/table/" + "{{.title}}" + "/data"
         });
 
+        var header = table.columns().header();
+        for (var i = 0; i !== header.length; i++) {
+            var col = header[i].innerHTML;
+            col_vals.push(col);
+            if (pks.includes(col)) {
+                pks_ids.push(i);
+            }
+        }
+
         $('#example').on('click', 'td', function () {
             var cell = table.cell(this);
             var data = cell.data();
             var index = cell.index();
             var row = index.row;
             var col = index.column;
+
+            // primary key cannot be changed
+            if (pks_ids.includes(col)) {
+                return;
+            }
 
             var tmp = '<div id="my-table-edit" class="input-group">\n' +
                 '                            <input id="my-table-input" type="text" size="16" style="width: 80%"/>\n' +
@@ -83,17 +101,16 @@
             $(this).off('click', "#my-table-save").one("click", "#my-table-save", function () {
 
                 var row_vals = table.row(row).data();
-                var col_vals = [];
-                var header = table.columns().header();
-                for (var i = 0; i !== header.length; i++) {
-                    col_vals.push(header[i].innerHTML);
-                }
 
                 var dict = {};
-                dict['rows'] = row_vals;
-                dict['cols'] = col_vals;
-                dict['col'] = parseInt(col);
-                dict['data'] = data;
+                dict['rows'] = row_vals.filter(function (val, id) {
+                    return pks_ids.includes(id);
+                });
+                dict['cols'] = col_vals.filter(function (val, id) {
+                    return pks_ids.includes(id);
+                });
+                dict['col'] = col_vals[col];
+                dict['data'] = input.val();
 
                 $.ajax({
                     type: "POST",
@@ -112,7 +129,7 @@
 
             $(this).off('blur', '#my-table-input').on("blur", "#my-table-input", function () {
                 if (event.relatedTarget == null || event.relatedTarget.id !== 'my-table-save') {
-                    this.replaceWith(data);
+                    $('#my-table-edit').replaceWith(data);
                 }
             });
 

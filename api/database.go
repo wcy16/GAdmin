@@ -67,6 +67,27 @@ func GetCols(name string) []string {
 	return cols
 }
 
+func GetPKs(name string) []string {
+	script := fmt.Sprintf("SHOW KEYS FROM %s WHERE Key_name = 'PRIMARY'", name)
+	cols, rows, err := Query(script)
+	if err != nil {
+		panic(err)
+	}
+
+	ret := make([]string, 0)
+
+	for i := 0; i != len(cols); i++ {
+		if cols[i] == "Column_name" {
+			for _, li := range rows {
+				ret = append(ret, li[i])
+			}
+			break
+		}
+	}
+
+	return ret
+}
+
 func Query(sql string) (cols []string, results [][]string, err error) {
 	rows, err := db.Query(sql)
 	if err != nil {
