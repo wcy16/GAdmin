@@ -21,10 +21,14 @@ func DBConnect() {
 	if err != nil {
 		panic(err)
 	}
+	db.SetMaxOpenConns(2)
 }
 
 func GetTables() []string {
 	rows, err := db.Query("SHOW TABLES")
+	defer func() {
+		rows.Close()
+	}()
 
 	if err != nil {
 		panic(err)
@@ -43,6 +47,10 @@ func GetTables() []string {
 func GetCount(name string) int {
 	script := fmt.Sprintf("SELECT COUNT(*) FROM %s", name)
 	rows, err := db.Query(script)
+	defer func() {
+		rows.Close()
+	}()
+
 	if err != nil {
 		panic(err)
 	}
@@ -55,6 +63,10 @@ func GetCount(name string) int {
 func GetCols(name string) []string {
 	script := fmt.Sprintf("SELECT * FROM %s LIMIT 0", name)
 	rows, err := db.Query(script)
+	defer func() {
+		rows.Close()
+	}()
+
 	if err != nil {
 		panic(err)
 	}
@@ -90,6 +102,10 @@ func GetPKs(name string) []string {
 
 func Query(sql string) (cols []string, results [][]string, err error) {
 	rows, err := db.Query(sql)
+	defer func() {
+		rows.Close()
+	}()
+
 	if err != nil {
 		return
 	}
