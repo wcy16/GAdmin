@@ -21,13 +21,13 @@
 
                 </div>
                 <div class="modal-body">
-                    <form id="add_cmd_form">
+                    <form id="add_cmd_form" method="post">
 
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal -->
@@ -151,7 +151,7 @@
                 dict['data'] = input.val();
 
                 $.ajax({
-                    type: "POST",
+                    type: "PUT",
                     url: "/table/{{.title}}",
                     data: JSON.stringify(dict),
                     success: function (result) {

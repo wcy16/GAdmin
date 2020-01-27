@@ -17,6 +17,7 @@ type DataTable struct {
 	Data            [][]string `json:"data"`
 }
 
+// index page
 func Index(c *gin.Context) {
 	cards := make([]Card, 0)
 	cards = append(cards, SystemCard())
@@ -33,6 +34,7 @@ func Index(c *gin.Context) {
 	})
 }
 
+// get table structure
 func Table(c *gin.Context) {
 	name := c.Param("name")
 	cols := GetCols(name)
@@ -43,6 +45,7 @@ func Table(c *gin.Context) {
 	})
 }
 
+// edit data in a table
 func EditTable(c *gin.Context) {
 	type Request struct {
 		Rows []string
@@ -77,6 +80,7 @@ func EditTable(c *gin.Context) {
 	}
 }
 
+// load data in a table
 func LoadData(c *gin.Context) {
 	name := c.Param("name")
 	draw, _ := strconv.Atoi(c.Query("draw"))
@@ -100,10 +104,12 @@ func LoadData(c *gin.Context) {
 	}
 }
 
+// page for raw sql execute
 func RawSQL(c *gin.Context) {
 	c.HTML(http.StatusOK, "sql.tmpl", nil)
 }
 
+// execute sql
 func ExeRawSQL(c *gin.Context) {
 	body, _ := ioutil.ReadAll(c.Request.Body)
 	sql := string(body)
@@ -121,6 +127,7 @@ func ExeRawSQL(c *gin.Context) {
 	c.String(http.StatusOK, ret)
 }
 
+// query sql
 func QueryRawSQL(c *gin.Context) {
 	body, _ := ioutil.ReadAll(c.Request.Body)
 	sql := string(body)
@@ -138,10 +145,12 @@ func QueryRawSQL(c *gin.Context) {
 
 }
 
+// page for add cmd
 func GetAddCmd(c *gin.Context) {
 	c.HTML(http.StatusOK, "add_cmd.tmpl", nil)
 }
 
+// add cmd
 func AddCmd(c *gin.Context) {
 	cmd := config.Command{}
 
@@ -155,6 +164,7 @@ func AddCmd(c *gin.Context) {
 	}
 }
 
+// page for execute cmd
 func GetCmd(c *gin.Context) {
 	sid := c.Param("id")
 	id, err := strconv.Atoi(sid)
@@ -186,6 +196,7 @@ func GetCmd(c *gin.Context) {
 	}
 }
 
+// execute cmd
 func ExeCmd(c *gin.Context) {
 	var params []interface{}
 	if err := c.ShouldBindJSON(&params); err != nil {
