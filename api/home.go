@@ -78,6 +78,43 @@ func TableInsert(c *gin.Context) {
 
 }
 
+// delete
+func TableDel(c *gin.Context) {
+	type Request struct {
+		Rows [][]string
+		Cols []string
+	}
+	req := Request{}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+	} else {
+		wheres := make([]string, 0)
+		for _, row := range req.Rows {
+			s := ""
+			for idr, item := range row {
+				if idr == 0 {
+					s += fmt.Sprintf("(`%s` = '%s'", req.Cols[idr], item)
+				} else {
+					s += fmt.Sprintf(" AND `%s` = '%s'", req.Cols[idr], item)
+				}
+			}
+			s += ")"
+			wheres = append(wheres, s)
+		}
+
+		tableName := c.Param("name")
+		sql := fmt.Sprintf("DELETE FROM %s WHERE (%s)", tableName, strings.Join(wheres, ") OR ("))
+
+		_, err := db.Exec(sql)
+
+		if err != nil {
+			c.String(http.StatusNotAcceptable, err.Error())
+		} else {
+			c.Status(http.StatusOK)
+		}
+	}
+}
+
 // edit data in a table
 func TableEdit(c *gin.Context) {
 	type Request struct {
