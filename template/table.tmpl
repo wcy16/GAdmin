@@ -21,13 +21,13 @@
 
                 </div>
                 <div class="modal-body">
-                    <form id="add_cmd_form" method="post">
+                    <form id="add_cmd_form" onsubmit="return submitTableModal('/table/{{.title}}')">
 
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="submit" form="add_cmd_form" class="btn btn-primary">Save</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal -->
@@ -105,8 +105,8 @@
                     '                            <a href="#" class="btn btn-default disabled">' + col +
                     '                            </a>\n' +
                     '                        </span>\n' +
-                    '                            <input type="text" class="form-control" name="' + col + '" required>\n' +
-                    '                        </div>'
+                    '                            <input type="text" class="form-control" name="' + col + '">\n' +
+                    '                        </div>';
 
 
                 $('#add_cmd_form').append(input);
@@ -175,6 +175,29 @@
 
     });
 
+    function submitTableModal(url) {
+        // $('#add_cmd_form')
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: $('#add_cmd_form').serialize(),
+            success: function (result) {
+                $("#create-modal").modal('hide');
+                $(".modal-backdrop").remove();
+                $("body").removeClass('modal-open');
+                $("body").css('padding-right','0px');
+                LoadContent(url);
+            },
+            error: function (result) {
+                $("#create-modal").modal('hide');
+                alert(result.responseText);
+            }
+        });
+
+
+        return false
+    }
 
 
 </script>

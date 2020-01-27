@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type DataTable struct {
@@ -45,8 +46,40 @@ func Table(c *gin.Context) {
 	})
 }
 
+// insert
+func TableInsert(c *gin.Context) {
+	if err := c.Request.ParseForm(); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+	} else {
+		keys := make([]string, 0)
+		vals := make([]string, 0)
+
+		for k, v := range c.Request.PostForm {
+			if v[0] == "" {
+				continue
+			}
+			keys = append(keys, k)
+			vals = append(vals, v[0]) // no array data in post
+		}
+
+		tableName := c.Param("name")
+		sql := fmt.Sprintf("INSERT INTO %s (`%s`) VALUES ('%s')", tableName,
+			strings.Join(keys, "`,`"),
+			strings.Join(vals, "','"))
+
+		_, err := db.Exec(sql)
+
+		if err != nil {
+			c.String(http.StatusNotAcceptable, err.Error())
+		} else {
+			c.Status(http.StatusOK)
+		}
+	}
+
+}
+
 // edit data in a table
-func EditTable(c *gin.Context) {
+func TableEdit(c *gin.Context) {
 	type Request struct {
 		Rows []string
 		Cols []string
