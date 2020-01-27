@@ -1,7 +1,7 @@
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
+    <a href="#" class="brand-link">
         <span class="brand-text font-weight-light">GAdmin</span>
     </a>
 
@@ -28,10 +28,11 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
-                        {{ $p := .prefix }}
+                        {{ $p := .sidePrefix }}
+                        {{ $pre := .prefix }}
                         {{range $index, $element := .tables }}
                             <li class="nav-item">
-                                <a href="#" onclick="LoadContent('{{ $p }}/{{$element}}')" class="nav-link load-table">
+                                <a href="#" onclick="LoadContent('{{$pre}}/{{ $p }}/{{$element}}')" class="nav-link load-table">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>{{$element}}</p>
                                 </a>
@@ -49,14 +50,14 @@
                     </a>
                     <ul class="nav nav-treeview" id="side_cmd">
                         <li class="nav-item">
-                            <a href="#" onclick="LoadContent('cmd')" class="nav-link load-table">
+                            <a href="#" onclick="LoadContent('{{.prefix}}/cmd')" class="nav-link load-table">
                                 <i class="far nav-icon"></i>
                                 <p><i><b>add new command</b></i></p>
                             </a>
                         </li>
                         {{range $id, $elem := .commands }}
                             <li class="nav-item">
-                                <a href="#" onclick="LoadContent('cmd/{{$id}}')" class="nav-link load-table">
+                                <a href="#" onclick="LoadContent('{{$pre}}/cmd/{{$id}}')" class="nav-link load-table">
                                     <i class="far nav-icon"></i>
                                     <p>{{.Name}}</p>
                                 </a>
@@ -65,7 +66,7 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link" onclick="LoadContent('raw_sql')">
+                    <a href="#" class="nav-link" onclick="LoadContent('{{.prefix}}/raw_sql')">
                         <i class="nav-icon fas fa-keyboard"></i>
                         <p>
                             Raw SQL

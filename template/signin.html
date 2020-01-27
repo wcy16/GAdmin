@@ -93,10 +93,10 @@
     function submitSignIn() {
         $.ajax({
             type: "POST",
-            url: "/signin",
+            url: "{{.prefix}}/signin",
             data: $('#signup_form').serialize(),
             success: function (result) {
-                window.location.href = "/";
+                window.location.href = "{{.prefix}}";
             },
             error: function (result) {
                 alert(result.responseText);

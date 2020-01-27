@@ -2,24 +2,26 @@ package gadmin
 
 import (
 	"gadmin/api"
+	"gadmin/auth"
 	"gadmin/config"
 	"github.com/gin-gonic/gin"
 )
 
-func Serve(settingFile string) {
+func Serve(settingFile string, r *gin.Engine, prefix string) {
 	config.LoadSetting(settingFile)
 	api.DBConnect()
+	config.Prefix = prefix
 
-	router := gin.Default()
+	loadRes(r, prefix)
 
-	loadRes(router)
+	router := r.Group(prefix)
 
 	router.GET("/signin", api.SignIn)
 	router.POST("/signin", api.SignInCheck)
 	router.GET("/signout", api.SignOut)
 
-	//router.Use(auth.CookieCheck())
-	//router.Use(auth.CookieUpdate())
+	router.Use(auth.CookieCheck())
+	router.Use(auth.CookieUpdate())
 
 	router.GET("/", api.Index)
 
@@ -38,5 +40,5 @@ func Serve(settingFile string) {
 	router.POST("/cmd", api.AddCmd)
 
 	// Listen and serve on 0.0.0.0:8080
-	router.Run(":8080")
+	r.Run(":8080")
 }

@@ -4,7 +4,7 @@ package gadmin
 
 import "github.com/gin-gonic/gin"
 
-func loadRes(router *gin.Engine) {
-	router.Static("/static", "../static")
+func loadRes(router *gin.Engine, prefix string) {
+	router.Static(prefix+"/static", "../static")
 	router.LoadHTMLGlob("../template/*")
 }

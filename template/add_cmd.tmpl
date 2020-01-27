@@ -107,21 +107,21 @@
         }
 
         $.ajax({
-            url:"/cmd",
+            url:"{{.prefix}}/cmd",
             type:"POST",
             data:JSON.stringify(data),
             success:function(result){
                 window.alert("success!");
                 var name = data["name"];
                 var t = "<li class=\"nav-item\">\n" +
-                    "                                <a href=\"#\" onclick=\"LoadContent('cmd/" + result + "')\" class=\"nav-link load-table\">\n" +
+                    "                                <a href=\"#\" onclick=\"LoadContent('{{.prefix}}/cmd/" + result + "')\" class=\"nav-link load-table\">\n" +
                     "                                    <i class=\"far nav-icon\"></i>\n" +
                     "                                    <p><i>" + name + "</i></p>\n" +
                     "                                </a>\n" +
                     "                            </li>";
 
                 $("#side_cmd").append(t);
-                LoadContent("/cmd");
+                LoadContent("{{.prefix}}/cmd");
             },
             error:function (result) {
                 window.alert(result.responseText);

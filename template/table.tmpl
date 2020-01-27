@@ -89,7 +89,7 @@
             "scrollX": true,
             "processing": true,
             "serverSide": true,
-            "ajax": "/table/" + "{{.title}}" + "/data"
+            "ajax": "{{.prefix}}/table/{{.title}}/data"
         });
 
         var header = table.columns().header();
@@ -160,7 +160,7 @@
 
                 $.ajax({
                     type: "PUT",
-                    url: "/table/{{.title}}",
+                    url: "{{.prefix}}/table/{{.title}}",
                     data: JSON.stringify(dict),
                     success: function (result) {
                         data = result;
@@ -185,7 +185,7 @@
 
     function submitTableModal(url) {
         // $('#add_cmd_form')
-
+        url = '{{.prefix}}' + url;
         $.ajax({
             type: "POST",
             url: url,
@@ -229,7 +229,7 @@
                     return pks_ids.includes(id);
                 }));
             }
-            var url = "/table/{{.title}}";
+            var url = "{{.prefix}}/table/{{.title}}";
 
             $.ajax({
                 type: "DELETE",
@@ -251,6 +251,6 @@
 </script>
 
 <!-- DataTables -->
-<link rel="stylesheet" href="static/adminlte/plugins/datatables-select/css/select.bootstrap4.min.css">
-<script src="static/adminlte/plugins/datatables/jquery.dataTables.min.js"></script>
-<script src="static/adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<link rel="stylesheet" href="{{.prefix}}/static/adminlte/plugins/datatables-select/css/select.bootstrap4.min.css">
+<script src="{{.prefix}}/static/adminlte/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="{{.prefix}}/static/adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>

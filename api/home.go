@@ -24,13 +24,19 @@ func Index(c *gin.Context) {
 	cards = append(cards, SystemCard())
 
 	c.HTML(http.StatusOK, "index.html", gin.H{
-		"cards": cards,
+		"cards":  cards,
+		"prefix": config.Prefix,
 
 		"sidebar": gin.H{
-			"prefix":   "table",
-			"username": config.Get().Database.Username,
-			"tables":   GetTables(),
-			"commands": config.Get().Commands,
+			"prefix":     config.Prefix,
+			"sidePrefix": "table",
+			"username":   config.Get().Database.Username,
+			"tables":     GetTables(),
+			"commands":   config.Get().Commands,
+		},
+
+		"navbar": gin.H{
+			"prefix": config.Prefix,
 		},
 	})
 }
@@ -40,9 +46,10 @@ func Table(c *gin.Context) {
 	name := c.Param("name")
 	cols := GetCols(name)
 	c.HTML(http.StatusOK, "table.tmpl", gin.H{
-		"title": name,
-		"cols":  cols,
-		"pks":   GetPKs(name),
+		"prefix": config.Prefix,
+		"title":  name,
+		"cols":   cols,
+		"pks":    GetPKs(name),
 	})
 }
 
@@ -176,7 +183,9 @@ func LoadData(c *gin.Context) {
 
 // page for raw sql execute
 func RawSQL(c *gin.Context) {
-	c.HTML(http.StatusOK, "sql.tmpl", nil)
+	c.HTML(http.StatusOK, "sql.tmpl", gin.H{
+		"prefix": config.Prefix,
+	})
 }
 
 // execute sql
@@ -217,7 +226,9 @@ func QueryRawSQL(c *gin.Context) {
 
 // page for add cmd
 func GetAddCmd(c *gin.Context) {
-	c.HTML(http.StatusOK, "add_cmd.tmpl", nil)
+	c.HTML(http.StatusOK, "add_cmd.tmpl", gin.H{
+		"prefix": config.Prefix,
+	})
 }
 
 // add cmd
@@ -259,7 +270,8 @@ func GetCmd(c *gin.Context) {
 		card.Link = append(card.Link, link)
 
 		c.HTML(http.StatusOK, "exe_cmd.tmpl", gin.H{
-			"submit":      "/cmd/" + sid,
+			"prefix":      config.Prefix,
+			"submit":      config.Prefix + "/cmd/" + sid,
 			"description": command.Description,
 			"card":        card,
 		})

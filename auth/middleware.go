@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"gadmin/config"
 	"github.com/gin-gonic/gin"
 	"math/rand"
 	"net/http"
@@ -30,7 +31,7 @@ func CookieCheck() gin.HandlerFunc {
 		token, err := c.Cookie("token")
 
 		if err != nil || token == "" || token != tokenBuf || time.Now().After(tokenExpire) {
-			c.Redirect(http.StatusSeeOther, "/signin")
+			c.Redirect(http.StatusSeeOther, config.Prefix+"/signin")
 			c.Abort()
 			return
 		}

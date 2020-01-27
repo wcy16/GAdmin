@@ -8,7 +8,9 @@ import (
 )
 
 func SignIn(c *gin.Context) {
-	c.HTML(http.StatusOK, "signin.html", nil)
+	c.HTML(http.StatusOK, "signin.html", gin.H{
+		"prefix": config.Prefix,
+	})
 }
 
 func SignInCheck(c *gin.Context) {
@@ -37,5 +39,5 @@ func SignInCheck(c *gin.Context) {
 
 func SignOut(c *gin.Context) {
 	auth.DelToken(c)
-	c.Redirect(http.StatusSeeOther, "/signin")
+	c.Redirect(http.StatusSeeOther, config.Prefix+"/signin")
 }

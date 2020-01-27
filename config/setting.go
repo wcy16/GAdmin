@@ -7,6 +7,8 @@ import (
 	"os"
 )
 
+var Prefix string
+
 type Database struct {
 	Username string
 	Password string

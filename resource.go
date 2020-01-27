@@ -9,11 +9,11 @@ import (
 	"html/template"
 )
 
-func loadRes(router *gin.Engine) {
+func loadRes(router *gin.Engine, prefix string) {
 	html := template.Must(loadTemplate())
 
 	router.SetHTMLTemplate(html)
-	router.StaticFS("/static", static.AssetFile())
+	router.StaticFS(prefix+"/static", static.AssetFile())
 }
 
 func loadTemplate() (*template.Template, error) {

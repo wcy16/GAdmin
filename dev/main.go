@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"gadmin"
+	"github.com/gin-gonic/gin"
 	"github.com/go-bindata/go-bindata"
 	"path/filepath"
 )
@@ -17,7 +18,9 @@ func main() {
 		compile("static", "../static/", "../static/", "../static/static.go", true, true)
 		compile("template", "../template", "../template/", "../template/template.go", false, false)
 	} else {
-		gadmin.Serve("../config/setting.json")
+		c := gin.Default()
+		prefix := "/admin"
+		gadmin.Serve("../config/setting.json", c, prefix)
 	}
 }
 
